@@ -64,7 +64,7 @@ $config['log_driver'] = 'file';
 
 // date format for log entries
 // (read http://php.net/manual/en/function.date.php for all format characters)  
-$config['log_date_format'] = 'd-M-Y H:i:s O';
+$config['log_date_format'] = 'Y-M-d H:i:s O';
 
 // Syslog ident string to use, if using the 'syslog' log driver.
 $config['syslog_id'] = 'roundcube';
@@ -208,11 +208,11 @@ $config['smtp_port'] = 25;
 
 // SMTP username (if required) if you use %u as the username Roundcube
 // will use the current username for login
-$config['smtp_user'] = '';
+$config['smtp_user'] = '%u';
 
 // SMTP password (if required) if you use %p as the password Roundcube
 // will use the current user's password for login
-$config['smtp_pass'] = '';
+$config['smtp_pass'] = '%p';
 
 // SMTP AUTH type (DIGEST-MD5, CRAM-MD5, LOGIN, PLAIN or empty to use
 // best server supported one)
@@ -228,7 +228,7 @@ $config['smtp_auth_pw'] = null;
 // Hostname to give to the remote server for SMTP 'HELO' or 'EHLO' messages 
 // Leave this blank and you will get the server variable 'server_name' or 
 // localhost if that isn't defined.
-$config['smtp_helo_host'] = '';
+$config['smtp_helo_host'] = 'EHLO';
 
 // SMTP connection timeout, in seconds. Default: 0 (use default_socket_timeout)
 // Note: There's a known issue where using ssl connection with
@@ -315,7 +315,7 @@ $config['use_https'] = false;
 
 // Allow browser-autocompletion on login form.
 // 0 - disabled, 1 - username and host only, 2 - username, host, password
-$config['login_autocomplete'] = 0;
+$config['login_autocomplete'] = 2;
 
 // Forces conversion of logins to lower case.
 // 0 - disabled, 1 - only domain part, 2 - domain and local part.
@@ -328,7 +328,7 @@ $config['login_lc'] = 2;
 $config['skin_include_php'] = false;
 
 // display software version on login screen
-$config['display_version'] = false;
+$config['display_version'] = true;
 
 // Session lifetime in minutes
 $config['session_lifetime'] = 10;
@@ -398,7 +398,7 @@ $config['username_domain_forced'] = false;
 // %d - domain (http hostname without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
-$config['mail_domain'] = '';
+$config['mail_domain'] = 'example.co.jp';
 
 // Password charset.
 // Use it if your authentication backend doesn't support UTF-8.
@@ -448,7 +448,7 @@ $config['mail_header_delimiter'] = NULL;
 
 // number of chars allowed for line when wrapping text.
 // text wrapping is done when composing/sending messages
-$config['line_length'] = 72;
+$config['line_length'] = 256;
 
 // send plaintext messages as format=flowed
 $config['send_format_flowed'] = true;
@@ -478,7 +478,7 @@ $config['mime_magic'] = null;
 // This is used to derive mime-types from the filename extension or vice versa.
 // Such a file is usually part of the apache webserver. If you don't find a file named mime.types on your system,
 // download it from http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
-$config['mime_types'] = null;
+$config['mime_types'] = '/var/www/html/wm/config/mime.types';
 
 // path to imagemagick identify binary
 $config['im_identify_path'] = null;
@@ -528,7 +528,7 @@ $config['list_cols'] = array('subject', 'status', 'fromto', 'date', 'size', 'fla
 $config['language'] = null;
 
 // use this format for date display (date or strftime format)
-$config['date_format'] = 'Y-m-d';
+$config['date_format'] = 'Y/m/d';
 
 // give this choice of date formats to the user to select from
 // Note: do not use ambiguous formats like m/d/Y
@@ -541,10 +541,10 @@ $config['time_format'] = 'H:i';
 $config['time_formats'] = array('G:i', 'H:i', 'g:i a', 'h:i A');
 
 // use this format for short date display (derived from date_format and time_format)
-$config['date_short'] = 'D H:i';
+$config['date_short'] = 'Y/m/d(D) H:i';
 
 // use this format for detailed date/time formatting (derived from date_format and time_format)
-$config['date_long'] = 'Y-m-d H:i';
+$config['date_long'] = 'Y/m/d H:i';
 
 // store draft message is this mailbox
 // leave blank if draft messages should not be stored
@@ -851,7 +851,7 @@ $config['autocomplete_max'] = 15;
 
 // show address fields in this order
 // available placeholders: {street}, {locality}, {zipcode}, {country}, {region}
-$config['address_template'] = '{street}<br/>{locality} {zipcode}<br/>{country} {region}';
+$config['address_template'] = '{zipcode} {region}<br/>{street}';
 
 // Matching mode for addressbook search (including autocompletion)
 // 0 - partial (*abc*), default
@@ -865,7 +865,7 @@ $config['addressbook_search_mode'] = 0;
 // ----------------------------------
 
 // Use this charset as fallback for message decoding
-$config['default_charset'] = 'ISO-8859-1';
+$config['default_charset'] = 'ISO-2022-JP';
 
 // skin name: folder from skins/
 $config['skin'] = 'larry';
@@ -888,12 +888,12 @@ $config['addressbook_sort_col'] = 'surname';
 // 1: (prefix) firstname middlename surname (suffix)
 // 2: (prefix) surname firstname middlename (suffix)
 // 3: (prefix) surname, firstname middlename (suffix)
-$config['addressbook_name_listing'] = 0;
+$config['addressbook_name_listing'] = 2;
 
 // use this timezone to display date/time
 // valid timezone identifers are listed here: php.net/manual/en/timezones.php
 // 'auto' will use the browser's timezone settings
-$config['timezone'] = 'auto';
+$config['timezone'] = 'Asia/Tokyo';
 
 // prefer displaying HTML messages
 $config['prefer_html'] = true;
@@ -902,13 +902,13 @@ $config['prefer_html'] = true;
 // 0 - Never, always ask
 // 1 - Ask if sender is not in address book
 // 2 - Always show inline images
-$config['show_images'] = 0;
+$config['show_images'] = 1;
 
 // open messages in new window
 $config['message_extwin'] = false;
 
 // open message compose form in new window
-$config['compose_extwin'] = false;
+$config['compose_extwin'] = true;
 
 // compose html formatted messages by default
 // 0 - never, 1 - always, 2 - on reply to HTML message, 3 - on forward or reply to HTML message
@@ -918,10 +918,10 @@ $config['htmleditor'] = 0;
 $config['prettydate'] = true;
 
 // save compose message every 300 seconds (5min)
-$config['draft_autosave'] = 300;
+$config['draft_autosave'] = 180;
 
 // default setting if preview pane is enabled
-$config['preview_pane'] = false;
+$config['preview_pane'] = true;
 
 // Mark as read when viewed in preview pane (delay in seconds)
 // Set to -1 if messages in preview pane should not be marked as read
@@ -957,7 +957,7 @@ $config['flag_for_deletion'] = false;
 // Default interval for auto-refresh requests (in seconds)
 // These are requests for system state updates e.g. checking for new messages, etc.
 // Setting it to 0 disables the feature.
-$config['refresh_interval'] = 60;
+$config['refresh_interval'] = 30;
 
 // If true all folders will be checked for recent messages
 $config['check_all_folders'] = false;
@@ -987,16 +987,16 @@ $config['strip_existing_sig'] = true;
 $config['show_sig'] = 1;
 
 // Use MIME encoding (quoted-printable) for 8bit characters in message body
-$config['force_7bit'] = false;
+$config['force_7bit'] = true;
 
 // Defaults of the search field configuration.
 // The array can contain a per-folder list of header fields which should be considered when searching
 // The entry with key '*' stands for all folders which do not have a specific list set.
 // Please note that folder names should to be in sync with $config['default_folders']
-$config['search_mods'] = null;  // Example: array('*' => array('subject'=>1, 'from'=>1), 'Sent' => array('subject'=>1, 'to'=>1));
+$config['search_mods'] = array('*' => array('subject'=>1, 'from'=>1), 'Sent' => array('subject'=>1, 'to'=>1));  // Example: array('*' => array('subject'=>1, 'from'=>1), 'Sent' => array('subject'=>1, 'to'=>1));
 
 // Defaults of the addressbook search field configuration.
-$config['addressbook_search_mods'] = null;  // Example: array('name'=>1, 'firstname'=>1, 'surname'=>1, 'email'=>1, '*'=>1);
+$config['addressbook_search_mods'] = array('name'=>1, 'firstname'=>1, 'surname'=>1, 'email'=>1, '*'=>1);
 
 // 'Delete always'
 // This setting reflects if mail should be always deleted
@@ -1035,7 +1035,7 @@ $config['default_addressbook'] = null;
 $config['spellcheck_before_send'] = false;
 
 // Skip alternative email addresses in autocompletion (show one address per contact)
-$config['autocomplete_single'] = false;
+$config['autocomplete_single'] = true;
 
 // Default font for composed HTML message.
 // Supported values: Andale Mono, Arial, Arial Black, Book Antiqua, Courier New,

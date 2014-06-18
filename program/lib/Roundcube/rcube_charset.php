@@ -176,6 +176,7 @@ class rcube_charset
         static $mbstring_list   = null;
         static $mbstring_sch    = null;
         static $conv            = null;
+	if(strcasecmp('iso-2022-jp', $from)===0) $from = 'ISO-2022-JP-MS';
 
         $to   = empty($to) ? RCUBE_CHARSET : $to;
         $from = self::parse_charset($from);
@@ -233,8 +234,13 @@ class rcube_charset
         }
 
         // convert charset using mbstring module
-        if ($mbstring_list !== false) {
+        if ($mbstring_list !== null) {
             $aliases['WINDOWS-1257'] = 'ISO-8859-13';
+            $aliases['JIS'] = 'ISO-2022-JP-MS';
+            $aliases['ISO-2022-JP'] = 'ISO-2022-JP-MS';
+            $aliases['EUC-JP'] = 'EUCJP-WIN';
+            $aliases['SJIS'] = 'SJIS-WIN';
+            $aliases['SHIFT_JIS'] = 'SJIS-WIN';
             // it happens that mbstring supports ASCII but not US-ASCII
             if (($from == 'US-ASCII' || $to == 'US-ASCII') && !in_array('US-ASCII', $mbstring_list)) {
                 $aliases['US-ASCII'] = 'ASCII';
@@ -245,7 +251,10 @@ class rcube_charset
 
             // return if encoding found, string matches encoding and convert succeeded
             if (in_array($mb_from, $mbstring_list) && in_array($mb_to, $mbstring_list)) {
-                if (mb_check_encoding($str, $mb_from)) {
+               // if (mb_check_encoding($str, $mb_from)) {
+		if (mb_check_encoding($str, $mb_from) ||
+		   strcasecmp('ISO-2022-JP-MS', mb_detect_encoding($str, $mb_from))===0
+		) {
                     // Do the same as //IGNORE with iconv
                     mb_substitute_character('none');
                     $out = mb_convert_encoding($str, $mb_to, $mb_from);
@@ -759,12 +768,7 @@ class rcube_charset
 
         // iconv/mbstring are much faster (especially with long strings)
         if (function_exists('mb_convert_encoding')) {
-            $msch = mb_substitute_character('none');
-            mb_substitute_character('none');
-            $res = mb_convert_encoding($input, 'UTF-8', 'UTF-8');
-            mb_substitute_character($msch);
-
-            if ($res !== false) {
+            if (($res = mb_convert_encoding($input, 'UTF-8', 'UTF-8')) !== false) {
                 return $res;
             }
         }
@@ -800,8 +804,8 @@ class rcube_charset
                 }
                 $seq = '';
                 $out .= $chr;
-            }
             // first (or second) byte of multibyte sequence
+            }
             else if ($ord >= 0xC0) {
                 if (strlen($seq) > 1) {
                     $out .= preg_match($regexp, $seq) ? $seq : '';
@@ -811,8 +815,8 @@ class rcube_charset
                     $seq = '';
                 }
                 $seq .= $chr;
-            }
             // next byte of multibyte sequence
+            }
             else if ($seq) {
                 $seq .= $chr;
             }
