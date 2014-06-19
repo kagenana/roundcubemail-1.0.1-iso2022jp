@@ -70,7 +70,7 @@ $message_id = $COMPOSE['param']['message-id'];
 // set default charset
 $message_charset = isset($_POST['_charset']) ? $_POST['_charset'] : $OUTPUT->get_charset();
 // 20140616 add (test)
-//$message_charset = 'ISO-2022-JP';
+$message_charset = 'ISO-2022-JP';
 
 $EMAIL_FORMAT_ERROR = NULL;
 $RECIPIENT_COUNT    = 0;
@@ -475,10 +475,13 @@ else {
 
 if ($flowed) {
     if (!$text_charset) {
-        $text_charset = 'US-ASCII';
+        //$text_charset = 'US-ASCII';
+// 20140616 add (test)
+        $text_charset = 'ISO-2022-JP';
     }
 
-    $text_charset .= ";\r\n format=flowed";
+// 20140616 add (test)
+    //$text_charset .= ";\r\n format=flowed";
 }
 // 20140616 add (test)
 //$text_charset      = $message_charset;
@@ -486,10 +489,10 @@ if ($flowed) {
 // encoding settings for mail composing
 $MAIL_MIME->setParam('text_encoding', $transfer_encoding);
 $MAIL_MIME->setParam('html_encoding', 'quoted-printable');
-$MAIL_MIME->setParam('head_encoding', 'quoted-printable');
+//$MAIL_MIME->setParam('head_encoding', 'quoted-printable');
 
 // 20140616 add (test)
-//$MAIL_MIME->setParam('head_encoding', 'base64');
+$MAIL_MIME->setParam('head_encoding', 'base64');
 $MAIL_MIME->setParam('head_charset', $message_charset);
 $MAIL_MIME->setParam('html_charset', $message_charset);
 $MAIL_MIME->setParam('text_charset', $text_charset);
@@ -498,9 +501,9 @@ $MAIL_MIME->setParam('text_charset', $text_charset);
 if (function_exists('mb_encode_mimeheader')) {
     mb_internal_encoding($message_charset);
     $headers['Subject'] = mb_encode_mimeheader($headers['Subject'],
-        $message_charset, 'Q', "\r\n", 8);
+//        $message_charset, 'Q', "\r\n", 8);
 // 20140616 add (test)
-//        $message_charset, 'B', "\r\n", 8);
+        $message_charset, 'B', "\r\n", 8);
     mb_internal_encoding(RCUBE_CHARSET);
 }
 
